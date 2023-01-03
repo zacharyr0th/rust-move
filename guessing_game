@@ -1,0 +1,46 @@
+use rand::Rng; // randomness for the number btw 1-100
+use std::cmp::Ordering; // comparing
+use std::io; // dealing with user input, giving output
+
+// primary function of the game
+fn main() {
+    println!("Guess the number!");
+
+    // sets secret number to range btw 1-100
+    // u32 is 
+    let secret_number = rand::thread_rng().gen_range(1..=100);
+
+    // game 
+    loop {
+        println!("Please input your guess.");
+
+        // stores user input into mutable 'guess' variable
+        let mut guess = String::new();
+
+        // in/out lib to read line
+        io::stdin()
+            .read_line(&mut guess)
+            .expect("Failed to read line");
+        
+        // change guess to have to be a number
+        // parse returns result time and match helps w/ error handling
+        let guess: u32 = match guess.trim().parse() {
+            // forces game to only recognize number inputs
+            Ok(num) => num,
+            Err(_) => continue,
+        };
+
+        println!("You guessed: {guess}");
+        
+        // compares user input to secret number 
+        match guess.cmp(&secret_number) {
+            Ordering::Less => println!("Too small!"),
+            Ordering::Greater => println!("Too big!"),
+            Ordering::Equal => {
+                println!("You win!");
+                // quits game after user wins
+                break;
+            }
+        }
+    }
+}
