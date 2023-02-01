@@ -1,0 +1,97 @@
+// Define a struct to represent the game board
+struct TicTacToe {
+    board: [u8; 9],
+    current_player: u8,
+}
+
+impl TicTacToe {
+    // Create a new instance of the game
+    fn new() -> TicTacToe {
+        TicTacToe {
+            board: [0; 9],
+            current_player: 1,
+        }
+    }
+
+    // Check if a move is valid
+    fn is_valid_move(&self, position: usize) -> bool {
+        self.board[position] == 0
+    }
+
+    // Make a move
+    fn make_move(&mut self, position: usize) {
+        self.board[position] = self.current_player;
+        self.current_player = 3 - self.current_player;
+    }
+
+    // Check if the game is over
+    fn is_game_over(&self) -> bool {
+        // Check rows
+        for i in 0..3 {
+            let row = i * 3;
+            if self.board[row] != 0 &&
+                self.board[row] == self.board[row + 1] &&
+                self.board[row] == self.board[row + 2]
+            {
+                return true;
+            }
+        }
+
+        // Check columns
+        for i in 0..3 {
+            if self.board[i] != 0 &&
+                self.board[i] == self.board[i + 3] &&
+                self.board[i] == self.board[i + 6]
+            {
+                return true;
+            }
+        }
+
+        // Check diagonals
+        if self.board[0] != 0 &&
+            self.board[0] == self.board[4] &&
+            self.board[0] == self.board[8]
+        {
+            return true;
+        }
+        if self.board[2] != 0 &&
+            self.board[2] == self.board[4] &&
+            self.board[2] == self.board[6]
+        {
+            return true;
+        }
+
+        // Check if all positions are filled
+        for i in 0..9 {
+            if self.board[i] == 0 {
+                return false;
+            }
+        }
+
+        true
+    }
+}
+
+fn main() {
+    let mut game = TicTacToe::new();
+
+    while !game.is_game_over() {
+        // Print the current board
+        for i in 0..9 {
+            print!("{} ", game.board[i]);
+            if i % 3 == 2 {
+                println!();
+            }
+        }
+
+        // Get the next move
+        println!("Player {}: Enter your move (0-8):", game.current_player);
+        let mut input = String::new();
+        std::io::stdin().read_line(&mut input).unwrap();
+        let position = input.trim().parse().unwrap();
+
+        // Make the move
+        if game.is_valid_move(position) {
+            game.make_move(position);
+        } else {
+            println!
