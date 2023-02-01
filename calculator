@@ -1,0 +1,38 @@
+use std::io; // Import the io module from the standard library
+
+fn main() { // Define the main function, the entry point of the program
+    println!("Simple Calculator"); // Print a message to the console
+    println!("================");
+
+    loop { // Start an infinite loop
+        println!("Enter two numbers:");
+
+        let mut first = String::new(); // Declare a mutable variable to hold the first number as a string
+        io::stdin().read_line(&mut first).unwrap(); // Read a line of input from the user and store it in the first variable
+        let first = first.trim().parse::<f64>().unwrap(); // Trim the whitespace from the input and parse it as a floating-point number
+
+        let mut second = String::new(); // Declare a mutable variable to hold the second number as a string
+        io::stdin().read_line(&mut second).unwrap(); // Read a line of input from the user and store it in the second variable
+        let second = second.trim().parse::<f64>().unwrap(); // Trim the whitespace from the input and parse it as a floating-point number
+
+        println!("Enter an operation (+, -, *, /):");
+
+        let mut operation = String::new(); // Declare a mutable variable to hold the operation as a string
+        io::stdin().read_line(&mut operation).unwrap(); // Read a line of input from the user and store it in the operation variable
+        let operation = operation.trim(); // Trim the whitespace from the operation variable
+
+        let result = match operation { // Match the operation variable against different cases
+            "+" => first + second, // If the operation is "+", add the first and second numbers
+            "-" => first - second, // If the operation is "-", subtract the second number from the first
+            "*" => first * second, // If the operation is "*", multiply the first and second numbers
+            "/" => first / second, // If the operation is "/", divide the first number by the second
+            _ => { // Catch any other cases
+                println!("Invalid operator. Try again."); // Print an error message
+                continue; // Start the loop again
+            }
+        };
+
+        println!("Result: {}", result); // Print the result of the operation
+        break; // Break out of the loop
+    }
+}
