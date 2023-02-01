@@ -1,0 +1,35 @@
+// Gets the balance of the account in terms of "lamports".
+// Checks if the balance is sufficient for a certain operation (in this case, 1000 lamports).
+// If the balance is sufficient, subtracts the desired amount (in this case, 1000 lamports) from the account balance.
+// Stores the updated account data back to the blockchain.
+
+// Import the Solana SDK
+extern crate solana_sdk;
+
+// Use the Solana SDK
+use solana_sdk::{
+    account::Account,
+    entrypoint::{ProgramResult,run_program},
+};
+
+// The entrypoint of the program
+#[no_mangle]
+pub extern "C" fn entrypoint(input: &[u8]) -> ProgramResult {
+    // Convert the input data to an Account
+    let account = Account::from_slice(input)?;
+
+    // Get the balance of the account
+    let balance = account.lamports();
+
+    // Check if the balance is sufficient for the operation
+    if balance < 1000 {
+        // Return an error if the balance is not sufficient
+        return Err("insufficient balance".into());
+    }
+
+    // Deduct the amount from the account's balance
+    account.try_subtract(1000)?;
+
+    // Store the updated account data
+    account.store()
+}
